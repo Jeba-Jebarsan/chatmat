@@ -7,7 +7,7 @@ export async function POST(request: NextRequest) {
   try {
     const { message } = await request.json();
     const model = genAI.getGenerativeModel({ model: "gemini-pro" });
-    
+
     // Add introduction if asked about identity or capabilities
     const identityQuestions = [
       "who are you",
@@ -24,29 +24,30 @@ export async function POST(request: NextRequest) {
 
     if (identityQuestions.some(q => message.toLowerCase().includes(q))) {
       return NextResponse.json({ 
-        message: `I am ChatMate, an AI-powered conversation assistant created by **Vibushana Sharma**. I can help you with:
+        message: `I am ChatMate, an AI-powered assistant designed primarily for **full-stack web development**. I can help you with:
 
-- Answering questions on any topic
-- Writing and reviewing code
-- Math and scientific calculations
-- Language translation
-- Creative writing and brainstorming
-- Analysis and explanations
-- General conversation and chat
+- Developing web applications using modern frameworks
+- Debugging and optimizing code
+- Setting up and managing databases
+- Building and integrating APIs
+- Solving issues with front-end and back-end development
+- Providing best practices for scalable, maintainable code
+- Guiding deployment and hosting strategies
 
-How can I assist you today?`
+I was created by **Vibushana Sharma**, and I aim to make web development tasks easier and more efficient. How can I assist you today?`
       });
     }
     
-    // Enhanced prompt with context and guidelines
-    const enhancedPrompt = `As ChatMate (created by **Vibushana Sharma**), please provide a helpful, accurate, and engaging response to: ${message}
+    // Enhanced prompt with context and guidelines for web development
+    const enhancedPrompt = `As ChatMate (created by **Vibushana Sharma**), please provide a detailed and accurate response to the following query, with a focus on full-stack web development: ${message}
 
-Remember to:
-- Be clear and concise
-- Include relevant examples when helpful
-- Format code blocks with proper syntax
-- Break down complex topics
-- Cite sources when appropriate`;
+Guidelines:
+- Provide clear, actionable steps or solutions
+- Include code snippets formatted with proper syntax
+- Explain concepts relevant to full-stack development (e.g., frameworks, databases, APIs)
+- Break down complex topics for better understanding
+- Share best practices and potential pitfalls in development
+- Cite relevant documentation or resources when necessary`;
 
     const result = await model.generateContent(enhancedPrompt);
     const response = await result.response;
